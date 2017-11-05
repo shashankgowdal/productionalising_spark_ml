@@ -17,7 +17,7 @@ import scala.collection.mutable
 /**
   * Created by shashank on 05/11/2017.
   */
-object PipelineWithSampling {
+object DecisionTreeCachingIssue {
 
   def main(args: Array[String]) {
     val sparkConf = new SparkConf()
