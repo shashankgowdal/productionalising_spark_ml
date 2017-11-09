@@ -26,14 +26,16 @@ object PipelineWithSampling {
 
     val data = (1 to 100).foldRight(housingData)((index, interData) => interData.union(housingData.selectExpr(housingData.columns:_*)))
 
-    //data.cache()
+    data.cache()
+
+
 
     val sampledDatas = data.randomSplit(Array(0.6, 0.8))
     val trainData = sampledDatas(0)
     val testData = sampledDatas(1)
 
-    trainData.cache()
-    testData.cache()
+    //trainData.cache()
+    //testData.cache()
 
     val startTime = new Date()
     val pipelineStages = DataUtil.createPipeline(data.schema, "median_house_value")

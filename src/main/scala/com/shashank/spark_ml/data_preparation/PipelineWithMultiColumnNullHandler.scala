@@ -88,7 +88,7 @@ object PipelineWithMultiColumnNullHandler {
 
   def main(args: Array[String]) {
     val sparkSession = SparkSession.builder.master("local").appName("example").getOrCreate()
-    val data = DataUtil.loadCsv(sparkSession, "/Users/shashank/Tellius/resources/datasets/Airlines delay data/2007_10mb.csv")
+    val data = DataUtil.loadCsv(sparkSession, "src/main/resources/airlines.csv")
 
     data.printSchema()
 
