@@ -1,19 +1,18 @@
-package com.shashank.spark_ml.data_preparation
+package com.shashank.sparkml.operationalize.stages
 
-import com.shashank.spark_ml.util.DataUtil
-import com.shashank.spark_ml.util.Params.{HasHandleWith, HasInputCol, HasNaValues}
-import org.apache.spark.annotation.DeveloperApi
+import com.shashank.sparkml.util.DataUtil
+import com.shashank.sparkml.operationalize.stages.PersistentParams._
 import org.apache.spark.ml.Transformer
 import org.apache.spark.ml.param.ParamMap
-import org.apache.spark.ml.util.Identifiable
-import org.apache.spark.sql.{DataFrame, Dataset, SparkSession, functions}
+import org.apache.spark.ml.util.{DefaultParamsReadable, DefaultParamsWritable, Identifiable}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 
 /**
   * Created by shashank on 04/11/2017.
   */
-class NaValuesHandler(override val uid: String) extends Transformer with HasInputCol with HasNaValues{
+class NaValuesHandler(override val uid: String) extends Transformer with HasInputCol with HasNaValues with DefaultParamsWritable {
 
   setNaValues(Array("", "null"))
 
@@ -44,15 +43,6 @@ class NaValuesHandler(override val uid: String) extends Transformer with HasInpu
 
 }
 
-object NaValuesHandlerTest {
-  def main(args: Array[String]) {
-    val sparkSession = SparkSession.builder.master("local").appName("example").getOrCreate()
-    val data = DataUtil.loadCsv(sparkSession, "src/main/resources/customers.csv")
-    data.show()
+object NaValuesHandler extends DefaultParamsReadable[NaValuesHandler] {
 
-    val naValuesHandler = new NaValuesHandler()
-    naValuesHandler.setInputCol("customerName")
-
-    naValuesHandler.transform(data).show()
-  }
 }

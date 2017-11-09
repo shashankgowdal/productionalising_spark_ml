@@ -1,9 +1,9 @@
-package com.shashank.spark_ml.caching
+package com.shashank.sparkml.caching
 
 import java.util.Date
 
-import com.shashank.spark_ml.data_preparation._
-import com.shashank.spark_ml.util.DataUtil
+import com.shashank.sparkml.datapreparation._
+import com.shashank.sparkml.util.DataUtil
 import org.apache.spark.SparkConf
 import org.apache.spark.ml.classification.DecisionTreeClassifier
 import org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer, VectorAssembler}

@@ -1,8 +1,8 @@
-package com.shashank.spark_ml.operationalize
+package com.shashank.sparkml.operationalize
 
 import java.util.Date
 
-import com.shashank.spark_ml.util.DataUtil
+import com.shashank.sparkml.util.DataUtil
 import org.apache.spark.SparkConf
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.sql.SparkSession

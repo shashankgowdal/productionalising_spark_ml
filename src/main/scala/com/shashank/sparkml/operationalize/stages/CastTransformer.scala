@@ -1,6 +1,6 @@
-package com.shashank.spark_ml.operationalize.stages
+package com.shashank.sparkml.operationalize.stages
 
-import com.shashank.spark_ml.operationalize.stages.PersistentParams._
+import com.shashank.sparkml.operationalize.stages.PersistentParams._
 import org.apache.spark.ml.Transformer
 import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.ml.util.{DefaultParamsReadable, DefaultParamsWritable, Identifiable}

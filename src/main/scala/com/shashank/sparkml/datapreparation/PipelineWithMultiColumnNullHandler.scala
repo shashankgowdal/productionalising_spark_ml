@@ -1,11 +1,11 @@
-package com.shashank.spark_ml.data_preparation
+package com.shashank.sparkml.datapreparation
 
 import java.util.Date
 
-import com.shashank.spark_ml.util.DataUtil
+import com.shashank.sparkml.util.DataUtil
 import org.apache.spark.ml.{Pipeline, PipelineStage}
 import org.apache.spark.ml.classification.DecisionTreeClassifier
-import org.apache.spark.ml.feature.{MinMaxScaler, OneHotEncoder, StringIndexer, VectorAssembler}
+import org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer, VectorAssembler}
 import org.apache.spark.ml.regression.DecisionTreeRegressor
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types.{NumericType, StringType, StructType}
@@ -13,20 +13,19 @@ import org.apache.spark.sql.types.{NumericType, StringType, StructType}
 import scala.collection.mutable
 
 /**
-  * Created by shashank on 04/11/2017.
+  * Created by shashank on 05/11/2017.
   */
-object BuildingPipeline {
-
+object PipelineWithMultiColumnNullHandler {
   def createPipeline(schema:StructType, labelColumn:String):Array[PipelineStage] = {
     val featureColumns = mutable.ArrayBuffer[String]()
+    val nullHandleWithMap = mutable.HashMap[String, String]()
     val preprocessingStages = schema.fields.filter(_.name != labelColumn).flatMap(field => {
       field.dataType match {
         case stringType:StringType =>
           val naValuesHandler = new NaValuesHandler()
           naValuesHandler.setInputCol(field.name)
 
-          val nullHandler = new NullHandlerEstimator()
-          nullHandler.setInputCol(field.name).setHandleWith("NA")
+          nullHandleWithMap += (field.name -> "NA")
 
           val stringIndexer = new StringIndexer()
           stringIndexer.setInputCol(field.name).setOutputCol(s"${field.name}_indexed")
@@ -35,15 +34,15 @@ object BuildingPipeline {
           oneHotEncoder.setInputCol(s"${field.name}_indexed").setOutputCol(s"${field.name}_encoded")
 
           featureColumns += (s"${field.name}_encoded")
-          Array[PipelineStage](naValuesHandler, nullHandler, stringIndexer, oneHotEncoder)
+          Array[PipelineStage](naValuesHandler, stringIndexer, oneHotEncoder)
 
         case numericType:NumericType =>
-          val nullHandler = new NullHandlerEstimator()
-          nullHandler.setInputCol(field.name).setHandleWith("mean")
+
+          nullHandleWithMap += (field.name -> "mean")
 
           featureColumns += (field.name)
 
-          Array[PipelineStage](nullHandler)
+          Array.empty[PipelineStage]
 
         case _ =>
           Array.empty[PipelineStage]
@@ -59,8 +58,7 @@ object BuildingPipeline {
         val naValuesHandler = new NaValuesHandler()
         naValuesHandler.setInputCol(labelColumn)
 
-        val nullHandler = new NullHandlerEstimator()
-        nullHandler.setInputCol(labelColumn).setHandleWith("NA")
+        nullHandleWithMap += (labelColumn -> "NA")
 
         val stringIndexer = new StringIndexer()
         stringIndexer.setInputCol(labelColumn).setOutputCol(s"${labelColumn}_indexed")
@@ -68,11 +66,10 @@ object BuildingPipeline {
         val decisionTreeClassifier = new DecisionTreeClassifier()
         decisionTreeClassifier.setFeaturesCol("features").setLabelCol(s"${labelColumn}_indexed")
 
-        Array(naValuesHandler, nullHandler, stringIndexer, decisionTreeClassifier)
+        Array(naValuesHandler, stringIndexer, decisionTreeClassifier)
 
       case numericType:NumericType =>
-        val nullHandler = new NullHandlerEstimator()
-        nullHandler.setInputCol(labelColumn).setHandleWith("mean")
+        nullHandleWithMap += (labelColumn -> "mean")
 
         val castTransformer = new CastTransformer()
         castTransformer.setInputCol(labelColumn)
@@ -80,10 +77,13 @@ object BuildingPipeline {
         val decisionTreeRegressor = new DecisionTreeRegressor()
         decisionTreeRegressor.setFeaturesCol("features").setLabelCol(labelColumn)
 
-        Array(nullHandler, castTransformer, decisionTreeRegressor)
+        Array(castTransformer, decisionTreeRegressor)
     }
 
-    (preprocessingStages :+ vectorAssembler) ++ algorithmStages
+    val nullHandler = new MultiColumnNullHandler()
+    nullHandler.setHandleWithMap(nullHandleWithMap.toMap)
+
+    (Array(nullHandler) ++ preprocessingStages :+ vectorAssembler) ++ algorithmStages
   }
 
   def main(args: Array[String]) {
@@ -107,3 +107,4 @@ object BuildingPipeline {
   }
 
 }
+

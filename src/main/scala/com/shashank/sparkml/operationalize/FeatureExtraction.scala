@@ -1,4 +1,4 @@
-package com.shashank.spark_ml.operationalize
+package com.shashank.sparkml.operationalize
 
 import org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer, StringIndexerModel, VectorAssembler}
 import org.apache.spark.ml.{Pipeline, PipelineModel}

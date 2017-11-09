@@ -1,6 +1,6 @@
-package com.shashank.spark_ml.data_preparation
+package com.shashank.sparkml.datapreparation
 
-import com.shashank.spark_ml.util.Params.HasInputCol
+import com.shashank.sparkml.util.Params.HasInputCol
 import org.apache.spark.ml.Transformer
 import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.ml.util.Identifiable

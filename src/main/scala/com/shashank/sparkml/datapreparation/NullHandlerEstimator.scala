@@ -1,7 +1,7 @@
-package com.shashank.spark_ml.data_preparation
+package com.shashank.sparkml.datapreparation
 
-import com.shashank.spark_ml.util.DataUtil
-import com.shashank.spark_ml.util.Params._
+import com.shashank.sparkml.util.DataUtil
+import com.shashank.sparkml.util.Params._
 import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.ml.util.Identifiable

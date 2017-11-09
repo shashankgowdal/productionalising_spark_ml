@@ -1,4 +1,4 @@
-package com.shashank.spark_ml.util
+package com.shashank.sparkml.util
 
 import org.apache.spark.ml.param.{Param, Params, StringArrayParam}
 

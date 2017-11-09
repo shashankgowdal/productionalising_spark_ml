@@ -1,4 +1,4 @@
-package com.shashank.spark_ml.data_preparation
+package com.shashank.sparkml.datapreparation
 
 import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.ml.Transformer
@@ -6,8 +6,8 @@ import org.apache.spark.ml.param.{Param, ParamMap, Params, StringArrayParam}
 import org.apache.spark.ml.util.Identifiable
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 import org.apache.spark.sql.types.StructType
-import com.shashank.spark_ml.util.Params._
-import com.shashank.spark_ml.util.DataUtil
+import com.shashank.sparkml.util.Params._
+import com.shashank.sparkml.util.DataUtil
 
 /**
   * Created by shashank on 04/11/2017.

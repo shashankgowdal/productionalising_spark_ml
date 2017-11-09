@@ -1,19 +1,23 @@
-package com.shashank.spark_ml.util
+package com.shashank.sparkml.operationalize
 
-import com.shashank.spark_ml.data_preparation.{CastTransformer, MultiColumnNullHandler, NaValuesHandler}
-import org.apache.spark.ml.PipelineStage
+import java.util.UUID
+
+import com.shashank.sparkml.operationalize.stages._
+import com.shashank.sparkml.util.DataUtil
+import org.apache.spark.SparkConf
 import org.apache.spark.ml.classification.DecisionTreeClassifier
 import org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer, VectorAssembler}
 import org.apache.spark.ml.regression.DecisionTreeRegressor
+import org.apache.spark.ml.{Pipeline, PipelineModel, PipelineStage}
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types.{NumericType, StringType, StructType}
-import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 
 import scala.collection.mutable
 
 /**
-  * Created by shashank on 04/11/2017.
+  * Created by shashank on 05/11/2017.
   */
-object DataUtil {
+object ModelPersistence {
 
   def createPipeline(schema:StructType, labelColumn:String):Array[PipelineStage] = {
     val featureColumns = mutable.ArrayBuffer[String]()
@@ -85,7 +89,25 @@ object DataUtil {
     (Array(nullHandler) ++ preprocessingStages :+ vectorAssembler) ++ algorithmStages
   }
 
-  def loadCsv(sparkSession:SparkSession, filePath:String):DataFrame = {
-    sparkSession.read.options(Map("inferSchema"->"true","header" -> "true")).csv(filePath)
+  def main(args: Array[String]) {
+    val sparkConf = new SparkConf()
+    val sparkSession = SparkSession.builder.master("local").appName("example").getOrCreate()
+    val data = DataUtil.loadCsv(sparkSession, "src/main/resources/housing.csv")
+
+    val pipelineStages = createPipeline(data.schema, "median_house_value")
+    val pipeline = new Pipeline()
+    pipeline.setStages(pipelineStages)
+    val pipelineModel = pipeline.fit(data)
+
+    val modelPath = s"/tmp/${UUID.randomUUID().toString}"
+    println(s"Saving model to path $modelPath")
+    pipelineModel.save(modelPath)
+
+    println(s"Loading model from path $modelPath")
+    val savedModel = PipelineModel.load(modelPath)
+    val predictedData = savedModel.transform(data)
+    predictedData.count()
+
   }
+
 }

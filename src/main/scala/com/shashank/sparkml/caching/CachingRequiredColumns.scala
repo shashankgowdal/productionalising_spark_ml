@@ -1,6 +1,6 @@
-package com.shashank.spark_ml.caching
+package com.shashank.sparkml.caching
 
-import com.shashank.spark_ml.util.DataUtil
+import com.shashank.sparkml.util.DataUtil
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 

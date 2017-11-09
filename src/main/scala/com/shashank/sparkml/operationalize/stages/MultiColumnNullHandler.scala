@@ -1,13 +1,13 @@
-package com.shashank.spark_ml.data_preparation
+package com.shashank.sparkml.operationalize.stages
 
-import com.shashank.spark_ml.util.DataUtil
-import com.shashank.spark_ml.util.Params._
-import org.apache.spark.ml.{Estimator, Model}
+import com.shashank.sparkml.util.DataUtil
+import com.shashank.sparkml.operationalize.stages.PersistentParams._
 import org.apache.spark.ml.param.ParamMap
-import org.apache.spark.ml.util.Identifiable
+import org.apache.spark.ml.util.{DefaultParamsReadable, DefaultParamsWritable, Identifiable}
+import org.apache.spark.ml.{Estimator, Model}
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.{SparkSession, _}
 import org.apache.spark.sql.types.{NumericType, StructType}
+import org.apache.spark.sql.{SparkSession, _}
 
 /**
   * Created by shashank on 05/11/2017.
@@ -50,7 +50,7 @@ class MultiColumnNullHandler (override val uid: String) extends Estimator[MultiC
 }
 
 class MultiColumnNullHandlerModel (override val uid: String)
-  extends Model[MultiColumnNullHandlerModel] with HasHandleWithMap with HasMeanValueMap {
+  extends Model[MultiColumnNullHandlerModel] with HasHandleWithMap with HasMeanValueMap with DefaultParamsWritable{
 
   def setHandleWithMap(value: Map[String, String]): this.type = set(handleWithMap, value)
 
@@ -88,6 +88,10 @@ class MultiColumnNullHandlerModel (override val uid: String)
   override def transformSchema(schema: StructType): StructType = schema
 
   def this() = this(Identifiable.randomUID("multiColumnNullHandlerModel"))
+}
+
+object MultiColumnNullHandlerModel extends DefaultParamsReadable[MultiColumnNullHandlerModel] {
+
 }
 
 object MultiColumnNullHandlerTrainTest {

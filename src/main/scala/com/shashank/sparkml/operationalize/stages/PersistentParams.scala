@@ -1,4 +1,4 @@
-package com.shashank.spark_ml.operationalize.stages
+package com.shashank.sparkml.operationalize.stages
 
 import org.apache.spark.ml.param.{Param, Params, StringArrayParam}
 import spray.json._
