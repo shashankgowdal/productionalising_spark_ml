@@ -14,7 +14,8 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
-  "org.apache.spark" %% "spark-mllib" % sparkVersion,
+  "org.apache.spark" %% "spark-mllib" % "2.2.0_mod" from "https://s3.amazonaws.com/telliussparkdependencies/spark-mllib_2.11-2.2.0.jar",
+  "org.apache.spark" %% "spark-mllib-local" % sparkVersion,
   "org.apache.spark" %% "spark-streaming" % sparkVersion,
   "org.apache.spark" %% "spark-hive" % sparkVersion,
   "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.4"
