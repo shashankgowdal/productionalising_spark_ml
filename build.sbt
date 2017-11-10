@@ -14,7 +14,7 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
-  "org.apache.spark" %% "spark-mllib" % "2.2.0_mod" from "https://file.town/uploads/4k9wbsg7qytchatqs2kwponj5.jar",
+  "org.apache.spark" %% "spark-mllib" % "2.2.0_mod" from "https://github.com/shashankgowdal/productionalising_spark_ml/raw/master/spark-mllib_2.11-2.2.0.jar",
   "org.apache.spark" %% "spark-mllib-local" % sparkVersion,
   "org.apache.spark" %% "spark-streaming" % sparkVersion,
   "org.apache.spark" %% "spark-hive" % sparkVersion,
