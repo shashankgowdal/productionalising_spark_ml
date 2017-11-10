@@ -63,6 +63,7 @@ object DataUtil {
         stringIndexer.setInputCol(labelColumn).setOutputCol(s"${labelColumn}_indexed")
 
         val decisionTreeClassifier = new DecisionTreeClassifier()
+        decisionTreeClassifier.setIntermediateStorageLevel("DISK_ONLY")
         decisionTreeClassifier.setFeaturesCol("features").setLabelCol(s"${labelColumn}_indexed")
 
         Array(naValuesHandler, stringIndexer, decisionTreeClassifier)
